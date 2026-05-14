@@ -16,3 +16,6 @@ export async function adminMiddleware(req, res, next) {
     res.status(500).json({ error: err.message })
   }
 }
+
+//  Session   New session - 2026-05-13T08:27:44.689Z
+//   Continue  opencode -s ses_1df8d0d4effeXvEjAeojJ2T4TQ
