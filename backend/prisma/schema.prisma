@@ -1,0 +1,173 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Role {
+  id          Int              @id @default(autoincrement())
+  name        String           @unique
+  guardName   String           @default("web")
+  users       User[]
+  permissions RolePermission[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@map("roles")
+}
+
+model Permission {
+  id        Int              @id @default(autoincrement())
+  name      String           @unique
+  guardName String           @default("web")
+  roles     RolePermission[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       Int        @map("role_id")
+  permissionId Int        @map("permission_id")
+  role         Role       @relation(fields: [roleId], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  createdAt    DateTime   @default(now())
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model User {
+  id         Int         @id @default(autoincrement())
+  name       String
+  email      String      @unique
+  password   String
+  roleId     Int         @map("role_id")
+  role       Role        @relation(fields: [roleId], references: [id])
+  incomes    Income[]
+  expenses   Expense[]
+  wishlists  Wishlist[]
+  todos      Todo[]
+  inventory  Inventory[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@map("users")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  items       Item[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("categories")
+}
+
+model Item {
+  id          Int         @id @default(autoincrement())
+  name        String
+  description String?
+  sku         String?
+  price       Float?
+  quantity    Int         @default(0)
+  purchased   Boolean     @default(false)
+  categoryId  Int         @map("category_id")
+  category    Category    @relation(fields: [categoryId], references: [id])
+  photos      Photo[]
+  wishlists   Wishlist[]
+  incomes     Income[]
+  expenses    Expense[]
+  inventory   Inventory[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("items")
+}
+
+model Photo {
+  id        Int      @id @default(autoincrement())
+  url       String
+  itemId    Int      @map("item_id")
+  item      Item     @relation(fields: [itemId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("photos")
+}
+
+model Wishlist {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  itemId    Int      @map("item_id")
+  user      User     @relation(fields: [userId], references: [id])
+  item      Item     @relation(fields: [itemId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, itemId])
+  @@map("wishlists")
+}
+
+model Income {
+  id          Int      @id @default(autoincrement())
+  title       String
+  amount      Float
+  date        DateTime @default(now())
+  description String?
+  itemId      Int?     @map("item_id")
+  item        Item?    @relation(fields: [itemId], references: [id])
+  userId      Int      @map("user_id")
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("incomes")
+}
+
+model Expense {
+  id          Int      @id @default(autoincrement())
+  title       String
+  amount      Float
+  date        DateTime @default(now())
+  description String?
+  itemId      Int?     @map("item_id")
+  item        Item?    @relation(fields: [itemId], references: [id])
+  userId      Int      @map("user_id")
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("expenses")
+}
+
+model Inventory {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  itemId    Int      @map("item_id")
+  quantity  Int      @default(1)
+  user      User     @relation(fields: [userId], references: [id])
+  item      Item     @relation(fields: [itemId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, itemId])
+  @@map("inventory")
+}
+
+model Todo {
+  id        Int      @id @default(autoincrement())
+  title     String
+  done      Boolean  @default(false)
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("todos")
+}

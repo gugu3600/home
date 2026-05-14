@@ -1,0 +1,50 @@
+import { expenseService } from '../services/expenseService.js'
+
+export const expenseController = {
+  async index(req, res) {
+    try {
+      const expenses = await expenseService.getAll(req.user.id)
+      res.json(expenses)
+    } catch (err) {
+      res.status(500).json({ error: err.message })
+    }
+  },
+
+  async show(req, res) {
+    try {
+      const expense = await expenseService.getById(Number(req.params.id), req.user.id)
+      if (!expense) return res.status(404).json({ error: 'Expense not found' })
+      res.json(expense)
+    } catch (err) {
+      res.status(500).json({ error: err.message })
+    }
+  },
+
+  async store(req, res) {
+    try {
+      const data = { ...req.body, userId: req.user.id, date: req.body.date ? new Date(req.body.date) : new Date() }
+      const expense = await expenseService.create(data)
+      res.status(201).json(expense)
+    } catch (err) {
+      res.status(500).json({ error: err.message })
+    }
+  },
+
+  async update(req, res) {
+    try {
+      const expense = await expenseService.update(Number(req.params.id), req.body)
+      res.json(expense)
+    } catch (err) {
+      res.status(500).json({ error: err.message })
+    }
+  },
+
+  async destroy(req, res) {
+    try {
+      await expenseService.delete(Number(req.params.id))
+      res.json({ message: 'Expense deleted' })
+    } catch (err) {
+      res.status(500).json({ error: err.message })
+    }
+  },
+}
