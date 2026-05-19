@@ -1,0 +1,73 @@
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { authService } from '../services/authService.js'
+
+const router = useRouter()
+const name = ref('')
+const email = ref('')
+const password = ref('')
+const passwordConfirm = ref('')
+const error = ref('')
+const loading = ref(false)
+
+async function register() {
+  error.value = ''
+  if (!name.value.trim() || !email.value.trim() || !password.value) {
+    error.value = 'All fields are required'
+    return
+  }
+  if (password.value !== passwordConfirm.value) {
+    error.value = 'Passwords do not match'
+    return
+  }
+  loading.value = true
+  try {
+    await authService.register(name.value.trim(), email.value.trim(), password.value)
+    router.push({ name: 'Login' })
+  } catch (err) {
+    error.value = err.response?.data?.error || err.response?.data?.message || 'Registration failed'
+  } finally {
+    loading.value = false
+  }
+}
+</script>
+
+<template>
+  <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md w-full max-w-sm">
+      <h1 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">Create Account</h1>
+      <form @submit.prevent="register" class="flex flex-col gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
+          <input v-model="name" type="text" required
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-black dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+          <input v-model="email" type="email" required
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-black dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
+          <input v-model="password" type="password" required
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-black dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm Password</label>
+          <input v-model="passwordConfirm" type="password" required
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-black dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        </div>
+        <p v-if="error" class="text-sm text-red-600 dark:text-red-400">{{ error }}</p>
+        <button type="submit" :disabled="loading"
+          class="w-full py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:opacity-50">
+          {{ loading ? 'Creating account...' : 'Register' }}
+        </button>
+      </form>
+      <p class="text-sm text-center text-gray-500 dark:text-gray-400 mt-4">
+        Already have an account?
+        <router-link :to="{ name: 'Login' }" class="text-indigo-600 dark:text-indigo-400 hover:underline">Sign in</router-link>
+      </p>
+    </div>
+  </div>
+</template>

@@ -14,7 +14,9 @@ export const userRepository = {
   },
 
   create(data) {
-    return prisma.user.create({ data })
+    return prisma.user.create({  data,include: {role: true}
+    });
+    
   },
 
   update(id, data) {

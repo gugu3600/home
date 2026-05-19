@@ -6,6 +6,11 @@ class AuthService {
     return data;
   }
 
+  async register(name, email, password) {
+    const { data } = await http.post('/auth/register', { name, email, password })
+    return data
+  }
+
   async logout() {
     const { data } = await http.post('/auth/logout')
     return data

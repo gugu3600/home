@@ -16,7 +16,7 @@ export const userService = {
 
   async create(data) {
     const hashed = await bcrypt.hash(data.password, 10)
-    return userRepository.create({ ...data, password: hashed })
+    return userRepository.create({ ...data, password: hashed,roleId : 2 })
   },
 
   async update(id, data) {
