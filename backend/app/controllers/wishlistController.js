@@ -1,9 +1,11 @@
 import { wishlistService } from '../services/wishlistService.js'
+import { familyService } from '../services/familyService.js'
 
 export const wishlistController = {
   async index(req, res) {
     try {
-      const items = await wishlistService.getAll(req.user.id)
+      const userIds = req.query.family ? await familyService.getFamilyMemberIds(req.user.id) : [req.user.id]
+      const items = await wishlistService.getByUserIds(userIds)
       res.json(items)
     } catch (err) {
       res.status(500).json({ error: err.message })

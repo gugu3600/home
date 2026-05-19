@@ -1,8 +1,8 @@
 import http from './api.js'
 
 class WishlistService {
-  async getAll() {
-    const { data } = await http.get('/wishlists')
+  async getAll(params = '') {
+    const { data } = await http.get(`/wishlists${params}`)
     return data
   }
 

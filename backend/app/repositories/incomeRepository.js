@@ -2,7 +2,7 @@ import { prisma } from '../../config/prisma.js'
 
 export const incomeRepository = {
   findAll(userId) {
-    return prisma.income.findMany({ where: { userId }, orderBy: { date: 'desc' } })
+    return prisma.income.findMany({ where: { userId }, orderBy: { date: 'desc' }, include: { user: { select: { id: true, name: true } } } })
   },
 
   findAllByUserIds(userIds) {

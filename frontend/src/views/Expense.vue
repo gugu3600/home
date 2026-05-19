@@ -10,7 +10,7 @@ const editing = ref(null)
 onMounted(() => fetchItems())
 
 async function fetchItems() {
-  items.value = await expenseService.getAll()
+  items.value = await expenseService.getAll('?family=true')
 }
 
 async function save() {
@@ -63,6 +63,7 @@ async function remove(id) {
         <thead class="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
           <tr>
             <th class="text-left px-4 py-3">Title</th>
+            <th class="text-left px-4 py-3">User</th>
             <th class="text-left px-4 py-3">Amount</th>
             <th class="text-left px-4 py-3">Date</th>
             <th class="text-right px-4 py-3">Actions</th>
@@ -71,6 +72,7 @@ async function remove(id) {
         <tbody>
           <tr v-for="item in items" :key="item.id" class="border-t dark:border-gray-700">
             <td class="px-4 py-3 text-gray-900 dark:text-gray-200">{{ item.title }}</td>
+            <td class="px-4 py-3"><span v-if="item.user" class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 px-2 py-0.5 rounded-full">{{ item.user.name }}</span></td>
             <td class="px-4 py-3 text-red-600 dark:text-red-400 font-medium">-${{ item.amount.toFixed(2) }}</td>
             <td class="px-4 py-3 text-gray-500 dark:text-gray-400">{{ new Date(item.date).toLocaleDateString() }}</td>
             <td class="px-4 py-3 text-right">
@@ -79,7 +81,7 @@ async function remove(id) {
             </td>
           </tr>
           <tr v-if="items.length === 0">
-            <td colspan="4" class="px-4 py-8 text-center text-gray-400 dark:text-gray-500">No expenses recorded</td>
+            <td colspan="5" class="px-4 py-8 text-center text-gray-400 dark:text-gray-500">No expenses recorded</td>
           </tr>
         </tbody>
       </table>

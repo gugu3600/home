@@ -8,7 +8,7 @@ const imageUrl = import.meta.env.VITE_IMAGE_URL
 onMounted(() => fetchItems())
 
 async function fetchItems() {
-  items.value = await wishlistService.getAll()
+  items.value = await wishlistService.getAll('?family=true')
 }
 
 async function remove(id) {
@@ -26,7 +26,10 @@ async function remove(id) {
         <img v-if="w.item.photos?.length" :src="imageUrl + w.item.photos[0].url" class="w-full h-40 object-cover" />
         <div v-else class="w-full h-40 bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-400 dark:text-gray-500 text-sm">No image</div>
         <div class="p-4 flex flex-col gap-2">
-          <h3 class="font-semibold text-gray-900 dark:text-white">{{ w.item.name }}</h3>
+          <div class="flex items-center justify-between">
+            <h3 class="font-semibold text-gray-900 dark:text-white">{{ w.item.name }}</h3>
+            <span v-if="w.user" class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 px-2 py-0.5 rounded-full">{{ w.user.name }}</span>
+          </div>
           <p class="text-sm text-gray-500 dark:text-gray-400">{{ w.item.description || 'No description' }}</p>
           <p class="text-lg font-bold text-indigo-600 dark:text-indigo-400">${{ w.item.price?.toFixed(2) || '0.00' }}</p>
           <button @click="remove(w.id)" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 self-start">

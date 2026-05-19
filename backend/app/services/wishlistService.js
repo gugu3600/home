@@ -5,6 +5,10 @@ export const wishlistService = {
     return wishlistRepository.findByUser(userId)
   },
 
+  async getByUserIds(userIds) {
+    return wishlistRepository.findByUserIds(userIds)
+  },
+
   async add(userId, itemId) {
     return wishlistRepository.create(userId, Number(itemId))
   },

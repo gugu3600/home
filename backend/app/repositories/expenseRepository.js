@@ -2,7 +2,7 @@ import { prisma } from '../../config/prisma.js'
 
 export const expenseRepository = {
   findAll(userId) {
-    return prisma.expense.findMany({ where: { userId }, orderBy: { date: 'desc' } })
+    return prisma.expense.findMany({ where: { userId }, orderBy: { date: 'desc' }, include: { user: { select: { id: true, name: true } } } })
   },
 
   findAllByUserIds(userIds) {
