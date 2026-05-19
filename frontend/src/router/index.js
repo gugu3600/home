@@ -19,6 +19,7 @@ const routes = [
       { path: 'items', name: 'Items', component: () => import('../views/ItemsBuy.vue') },
       { path: 'wishlist', name: 'Wishlist', component: () => import('../views/Wishlist.vue') },
       { path: 'inventory', name: 'Inventory', component: () => import('../views/InventoryView.vue') },
+      { path: 'family', name: 'Family', component: () => import('../views/FamilyView.vue') },
       { path: 'todos', name: 'Todos', component: () => import('../views/Todo.vue') },
       {
         path: 'items/manage',

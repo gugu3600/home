@@ -10,6 +10,7 @@ import wishlistRoutes from './wishlistRoutes.js'
 import todoRoutes from './todoRoutes.js'
 import inventoryRoutes from './inventoryRoutes.js'
 import statsRoutes from './statsRoutes.js'
+import familyRoutes from './familyRoutes.js'
 
 const router = Router()
 
@@ -24,5 +25,6 @@ router.use('/wishlists', wishlistRoutes)
 router.use('/todos', todoRoutes)
 router.use('/inventory', inventoryRoutes)
 router.use('/stats', statsRoutes)
+router.use('/families', familyRoutes)
 
 export default router

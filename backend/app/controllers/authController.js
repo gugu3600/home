@@ -38,9 +38,9 @@ export const authController = {
         role : user.role
       }
 
-      res.json(payload)
+      return res.json(payload);
     } catch (err) {
-      res.status(500).json({ error: err.message })
+      return res.status(500).json({ error: err.message })
     }
   },
 

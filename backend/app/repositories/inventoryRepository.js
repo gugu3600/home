@@ -4,7 +4,15 @@ export const inventoryRepository = {
   findByUser(userId) {
     return prisma.inventory.findMany({
       where: { userId },
-      include: { item: { include: { category: true, photos: true } } },
+      include: { item: { include: { category: true, photos: true } }, user: { select: { id: true, name: true, email: true } } },
+      orderBy: { updatedAt: 'desc' },
+    })
+  },
+
+  findByUserIds(userIds) {
+    return prisma.inventory.findMany({
+      where: { userId: { in: userIds } },
+      include: { item: { include: { category: true, photos: true } }, user: { select: { id: true, name: true, email: true } } },
       orderBy: { updatedAt: 'desc' },
     })
   },

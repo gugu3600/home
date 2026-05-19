@@ -3,7 +3,7 @@ import http from './api.js'
 class AuthService {
   async login(email, password) {
     const { data } = await http.post('/auth/login', { email, password })
-    return data
+    return data;
   }
 
   async logout() {

@@ -1,8 +1,8 @@
 import http from './api.js'
 
 class InventoryService {
-  async getAll() {
-    const { data } = await http.get('/inventory')
+  async getAll(params) {
+    const { data } = await http.get(`/inventory${params || ''}`)
     return data
   }
 

@@ -7,6 +7,10 @@ export const inventoryService = {
     return inventoryRepository.findByUser(userId)
   },
 
+  getByUserIds(userIds) {
+    return inventoryRepository.findByUserIds(userIds)
+  },
+
   async adjust(id, delta, userId) {
     const inv = await inventoryRepository.findById(id)
     if (!inv) throw new Error('Inventory not found')

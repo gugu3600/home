@@ -5,6 +5,10 @@ export const expenseService = {
     return expenseRepository.findAll(userId)
   },
 
+  async getByUserIds(userIds) {
+    return expenseRepository.findAllByUserIds(userIds)
+  },
+
   async getById(id, userId) {
     return expenseRepository.findById(id, userId)
   },

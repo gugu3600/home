@@ -5,6 +5,14 @@ export const incomeRepository = {
     return prisma.income.findMany({ where: { userId }, orderBy: { date: 'desc' } })
   },
 
+  findAllByUserIds(userIds) {
+    return prisma.income.findMany({
+      where: { userId: { in: userIds } },
+      orderBy: { date: 'desc' },
+      include: { user: { select: { id: true, name: true } } },
+    })
+  },
+
   findById(id, userId) {
     return prisma.income.findFirst({ where: { id, userId } })
   },

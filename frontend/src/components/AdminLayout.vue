@@ -55,6 +55,9 @@ function logout() {
         <RouterLink @click="sidebarOpen = false" to="/inventory" class="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 hover:text-indigo-700 dark:hover:text-indigo-400" active-class="bg-indigo-50 dark:bg-gray-700 text-indigo-700 dark:text-indigo-400 font-medium">
           My Inventory
         </RouterLink>
+        <RouterLink @click="sidebarOpen = false" to="/family" class="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 hover:text-indigo-700 dark:hover:text-indigo-400" active-class="bg-indigo-50 dark:bg-gray-700 text-indigo-700 dark:text-indigo-400 font-medium">
+          Family
+        </RouterLink>
         <RouterLink @click="sidebarOpen = false" to="/wishlist" class="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 hover:text-indigo-700 dark:hover:text-indigo-400" active-class="bg-indigo-50 dark:bg-gray-700 text-indigo-700 dark:text-indigo-400 font-medium">
           Wishlist
         </RouterLink>
@@ -74,9 +77,10 @@ function logout() {
       </nav>
       <div class="p-4 border-t dark:border-gray-700">
         <div class="flex items-center justify-between mb-2">
-          <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{ store.user?.name }} ({{ store.user?.role?.name }})</p>
-          <button @click="store.toggleDark()" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 shrink-0 ml-2">
-            {{ store.isDark ? '☀️' : '🌙' }}
+          <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{ store.user?.name }} <span class="text-xs text-gray-400 dark:text-gray-500">({{ store.user?.role?.name ? store.user.role.name.charAt(0).toUpperCase() + store.user.role.name.slice(1) : 'N/A' }})</span></p>
+          <button @click="store.toggleDark()" class="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 shrink-0 ml-2 flex items-center gap-1">
+            <span>{{ store.isDark ? '☀️' : '🌙' }}</span>
+            <span>{{ store.isDark ? 'Light' : 'Dark' }}</span>
           </button>
         </div>
         <button @click="logout" class="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300">Logout</button>

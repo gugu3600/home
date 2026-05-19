@@ -5,6 +5,14 @@ export const expenseRepository = {
     return prisma.expense.findMany({ where: { userId }, orderBy: { date: 'desc' } })
   },
 
+  findAllByUserIds(userIds) {
+    return prisma.expense.findMany({
+      where: { userId: { in: userIds } },
+      orderBy: { date: 'desc' },
+      include: { user: { select: { id: true, name: true } } },
+    })
+  },
+
   findById(id, userId) {
     return prisma.expense.findFirst({ where: { id, userId } })
   },

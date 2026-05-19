@@ -1,19 +1,21 @@
 import { prisma } from '../../config/prisma.js'
+import { familyService } from '../services/familyService.js'
 
 export const statsController = {
   async dashboard(req, res) {
     try {
       const userId = req.user.id
+      const userIds = req.query.family ? await familyService.getFamilyMemberIds(userId) : [userId]
       const now = new Date()
       const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
 
       const expenses = await prisma.expense.findMany({
-        where: { userId, date: { gte: firstOfMonth } },
+        where: { userId: { in: userIds }, date: { gte: firstOfMonth } },
         include: { item: { include: { category: true } } },
       })
 
       const inventory = await prisma.inventory.findMany({
-        where: { userId },
+        where: { userId: { in: userIds } },
         include: { item: { include: { category: true } } },
       })
 
@@ -24,10 +26,8 @@ export const statsController = {
       for (const e of expenses) {
         const cat = e.item?.category?.name || 'Other'
         categorySpending[cat] = (categorySpending[cat] || 0) + e.amount
-
         const month = new Date(e.date).toLocaleString('default', { month: 'short', year: '2-digit' })
         monthlyExpenses[month] = (monthlyExpenses[month] || 0) + e.amount
-
         if (!mostExpensive || e.amount > mostExpensive.amount) {
           mostExpensive = { title: e.title, amount: e.amount, item: e.item?.name }
         }

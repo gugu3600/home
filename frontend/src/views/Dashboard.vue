@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import { incomeService } from '../services/incomeService.js'
 import { expenseService } from '../services/expenseService.js'
 import { statsService } from '../services/statsService.js'
+import { familyService } from '../services/familyService.js'
 import { Doughnut, Bar } from 'vue-chartjs'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js'
 
@@ -14,20 +15,30 @@ const balance = ref(0)
 const recentIncomes = ref([])
 const recentExpenses = ref([])
 const stats = ref(null)
+const hasFamily = ref(false)
 const doughnutData = ref(null)
 const doughnutOptions = ref({ responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af' } } } })
 const barData = ref(null)
 const barOptions = ref({ responsive: true, plugins: { legend: { display: false }, title: { display: true, text: 'Monthly Expenses', color: '#9ca3af' } }, scales: { x: { ticks: { color: '#9ca3af' } }, y: { ticks: { color: '#9ca3af' } } } })
 
 onMounted(async () => {
+  let familyParam = ''
   try {
-    const incomes = await incomeService.getAll()
+    const myFamily = await familyService.mine()
+    if (myFamily) {
+      hasFamily.value = true
+      familyParam = '?family=true'
+    }
+  } catch {}
+
+  try {
+    const incomes = await incomeService.getAll(familyParam)
     totalIncome.value = incomes.reduce((s, i) => s + i.amount, 0)
     recentIncomes.value = incomes.slice(0, 5)
   } catch {} 
 
   try {
-    const expenses = await expenseService.getAll()
+    const expenses = await expenseService.getAll(familyParam)
     totalExpense.value = expenses.reduce((s, e) => s + e.amount, 0)
     recentExpenses.value = expenses.slice(0, 5)
   } catch {}
@@ -35,7 +46,7 @@ onMounted(async () => {
   balance.value = totalIncome.value - totalExpense.value
 
   try {
-    const s = await statsService.dashboard()
+    const s = await statsService.dashboard(hasFamily.value)
     stats.value = s
 
     if (s.categoryCounts?.length) {

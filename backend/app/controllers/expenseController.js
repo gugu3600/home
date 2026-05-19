@@ -1,9 +1,11 @@
 import { expenseService } from '../services/expenseService.js'
+import { familyService } from '../services/familyService.js'
 
 export const expenseController = {
   async index(req, res) {
     try {
-      const expenses = await expenseService.getAll(req.user.id)
+      const userIds = req.query.family ? await familyService.getFamilyMemberIds(req.user.id) : [req.user.id]
+      const expenses = await expenseService.getByUserIds(userIds)
       res.json(expenses)
     } catch (err) {
       res.status(500).json({ error: err.message })

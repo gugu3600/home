@@ -51,6 +51,7 @@ async function main() {
   })
 
   const hashed = await bcrypt.hash('gugu3600', 10)
+  const hashedBonbon = await bcrypt.hash('bonbon117', 10)
   await prisma.user.create({
     data: {
       name: 'gugu',
@@ -66,6 +67,15 @@ async function main() {
       email: 'member@home.local',
       password: hashed,
       roleId: memberRole.id,
+    },
+  })
+
+  await prisma.user.create({
+    data: {
+      name: 'bonbon',
+      email: 'bonbon@gmail.com',
+      password: hashedBonbon,
+      roleId: adminRole.id,
     },
   })
 
@@ -107,7 +117,7 @@ async function main() {
     })
   }
 
-  console.log('Seed complete: admin + member roles, permissions, 2 users, categories, products')
+  console.log('Seed complete: admin + member roles, permissions, 3 users, categories, products')
 }
 
 main()

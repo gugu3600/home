@@ -1,8 +1,8 @@
 import http from './api.js'
 
 class ExpenseService {
-  async getAll() {
-    const { data } = await http.get('/expenses')
+  async getAll(params = '') {
+    const { data } = await http.get(`/expenses${params}`)
     return data
   }
 

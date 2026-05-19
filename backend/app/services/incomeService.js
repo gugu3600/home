@@ -5,6 +5,10 @@ export const incomeService = {
     return incomeRepository.findAll(userId)
   },
 
+  async getByUserIds(userIds) {
+    return incomeRepository.findAllByUserIds(userIds)
+  },
+
   async getById(id, userId) {
     return incomeRepository.findById(id, userId)
   },

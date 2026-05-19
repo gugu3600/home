@@ -15,12 +15,12 @@ async function login() {
   loading.value = true
   try {
     const data = await authService.login(email.value, password.value)
-    store.setUser(data)
-    router.push({ name: 'Dashboard' })
+    store.setUser(data);
+    router.push({ name: 'Dashboard' });
   } catch (err) {
-    error.value = err.response?.data?.error || 'Login failed'
+    error.value = err.response?.data?.error || 'Login failed';
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 </script>

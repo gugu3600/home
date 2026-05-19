@@ -42,19 +42,20 @@ model RolePermission {
 }
 
 model User {
-  id         Int         @id @default(autoincrement())
-  name       String
-  email      String      @unique
-  password   String
-  roleId     Int         @map("role_id")
-  role       Role        @relation(fields: [roleId], references: [id])
-  incomes    Income[]
-  expenses   Expense[]
-  wishlists  Wishlist[]
-  todos      Todo[]
-  inventory  Inventory[]
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  id                 Int         @id @default(autoincrement())
+  name               String
+  email              String      @unique
+  password           String
+  roleId             Int         @map("role_id")
+  role               Role        @relation(fields: [roleId], references: [id])
+  incomes            Income[]
+  expenses           Expense[]
+  wishlists          Wishlist[]
+  todos              Todo[]
+  inventory          Inventory[]
+  familyMemberships  FamilyUser[]
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
 
   @@map("users")
 }
@@ -170,4 +171,27 @@ model Todo {
   updatedAt DateTime @updatedAt
 
   @@map("todos")
+}
+
+model Family {
+  id        Int         @id @default(autoincrement())
+  name      String
+  code      String      @unique
+  users     FamilyUser[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@map("families")
+}
+
+model FamilyUser {
+  id        Int      @id @default(autoincrement())
+  familyId  Int      @map("family_id")
+  userId    Int      @map("user_id")
+  family    Family   @relation(fields: [familyId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([familyId, userId])
+  @@map("family_users")
 }
