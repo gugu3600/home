@@ -1,7 +1,8 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { inventoryService } from '../services/inventoryService.js'
 import { familyService } from '../services/familyService.js'
+import { store } from '../stores/index.js'
 
 const items = ref([])
 const imageUrl = import.meta.env.VITE_IMAGE_URL
@@ -14,6 +15,7 @@ onMounted(async () => {
   } catch {}
   await load()
 })
+watch(() => store.refreshKey, () => load())
 
 async function load() {
   const params = showFamily.value ? '?family=true' : ''

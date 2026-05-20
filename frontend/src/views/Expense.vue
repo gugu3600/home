@@ -1,6 +1,7 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { expenseService } from '../services/expenseService.js'
+import { store } from '../stores/index.js'
 
 const items = ref([])
 const showForm = ref(false)
@@ -8,6 +9,7 @@ const form = ref({ title: '', amount: '', description: '' })
 const editing = ref(null)
 
 onMounted(() => fetchItems())
+watch(() => store.refreshKey, () => fetchItems())
 
 async function fetchItems() {
   items.value = await expenseService.getAll('?family=true')

@@ -14,7 +14,7 @@ export const expenseRepository = {
   },
 
   findById(id, userId) {
-    return prisma.expense.findFirst({ where: { id, userId } })
+    return prisma.expense.findFirst({ where: { id, userId }, include: { user: { select: { id: true, name: true } } } })
   },
 
   create(data) {

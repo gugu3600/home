@@ -14,7 +14,7 @@ export const incomeRepository = {
   },
 
   findById(id, userId) {
-    return prisma.income.findFirst({ where: { id, userId } })
+    return prisma.income.findFirst({ where: { id, userId }, include: { user: { select: { id: true, name: true } } } })
   },
 
   create(data) {

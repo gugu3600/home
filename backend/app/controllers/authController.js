@@ -74,8 +74,8 @@ export const authController = {
         id: user.id,
         name: user.name,
         email: user.email,
-        role: user.role
-
+        role: user.role,
+        token: req.cookies?.token
       }
       return res.json(payload);
 

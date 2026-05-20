@@ -1,5 +1,6 @@
 import { incomeService } from '../services/incomeService.js'
 import { familyService } from '../services/familyService.js'
+import { notifyFamily } from '../../config/socket.js'
 
 export const incomeController = {
   async index(req, res) {
@@ -26,6 +27,8 @@ export const incomeController = {
     try {
       const data = { ...req.body, userId: req.user.id, date: req.body.date ? new Date(req.body.date) : new Date() }
       const income = await incomeService.create(data)
+      const full = await incomeService.getById(income.id, req.user.id)
+      notifyFamily(req.io, req.user.id, 'new:income', full)
       return res.status(201).json(income)
     } catch (err) {
       return res.status(500).json({ error: err.message })
@@ -43,7 +46,9 @@ export const incomeController = {
 
   async destroy(req, res) {
     try {
+      const income = await incomeService.getById(Number(req.params.id), req.user.id)
       await incomeService.delete(Number(req.params.id))
+      if (income) notifyFamily(req.io, req.user.id, 'delete:income', income)
       res.json({ message: 'Income deleted' })
     } catch (err) {
       res.status(500).json({ error: err.message })

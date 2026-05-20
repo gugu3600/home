@@ -1,11 +1,13 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { wishlistService } from '../services/wishlistService.js'
+import { store } from '../stores/index.js'
 
 const items = ref([])
 const imageUrl = import.meta.env.VITE_IMAGE_URL
 
 onMounted(() => fetchItems())
+watch(() => store.refreshKey, () => fetchItems())
 
 async function fetchItems() {
   items.value = await wishlistService.getAll('?family=true')
